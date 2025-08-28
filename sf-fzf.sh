@@ -87,8 +87,15 @@ sf_fzf() {
 			local template_type="${template_type%%)*}"  # Remove everything after the first ')'
 			local template_handle="${selected_dir#*) }" # Remove everything up to and including the first ') '
 
-			echo "silverfin get-${template_type}-id" "$template_handle"
-			echo "silverfin ${command}-${template_type}" "$template_handle"
+			local flag
+			case "$template_type" in
+			"reconciliation") flag="--handle" ;;
+			"shared-part") flag="--shared-part" ;;
+			"account-template" | "export-file") flag="--name" ;;
+			esac
+
+			# silverfin get-${template_type}-id" "$template_handle
+			silverfin "${command}"-"${template_type}" "$flag" "$template_handle"
 		done
 	}
 
