@@ -101,9 +101,9 @@ sf_fzf() {
 			esac
 
 			if [[ "$command" != "create" ]]; then
-				silverfin "${command}"-"${template_type}" "$flag" "$template_handle" --yes
+				silverfin "${command}"-"${template_type}" "$flag" "$template_handle" ${firm_flag:+"$firm_flag"} --yes
 			else
-				silverfin "${command}"-"${template_type}" "$flag" "$template_handle"
+				silverfin "${command}"-"${template_type}" "$flag" "$template_handle" ${firm_flag:+"$firm_flag"}
 			fi
 		done
 	}
@@ -154,7 +154,7 @@ sf_fzf() {
 			for shared_part in "${shared_parts_array[@]}"; do
 				local sp_handle="${shared_part#*) }"
 
-				silverfin "${operation}" --shared-part "$sp_handle" "$target_flag" "$target_handle" --yes
+				silverfin "${operation}" --shared-part "$sp_handle" "$target_flag" "$target_handle" ${firm_flag:+"$firm_flag"} --yes
 			done
 		done
 	}
@@ -166,6 +166,21 @@ sf_fzf() {
 	run_remove_shared_part() {
 		run_shared_part_operation "remove-shared-part" "remove"
 	}
+
+	# Parse --firm or --partner flag
+	local firm_flag=""
+	local cmd_args=()
+	for arg in "$@"; do
+		case "$arg" in
+		--firm=* | --partner=*)
+			firm_flag="$arg"
+			;;
+		*)
+			cmd_args+=("$arg")
+			;;
+		esac
+	done
+	set -- "${cmd_args[@]}"
 
 	# Entry point
 	if [[ $# -eq 0 ]]; then
