@@ -100,7 +100,11 @@ sf_fzf() {
 			"account-template" | "export-file") flag="--name" ;;
 			esac
 
-			silverfin "${command}"-"${template_type}" "$flag" "$template_handle"
+			if [[ "$command" != "create" ]]; then
+				silverfin "${command}"-"${template_type}" "$flag" "$template_handle" --yes
+			else
+				silverfin "${command}"-"${template_type}" "$flag" "$template_handle"
+			fi
 		done
 	}
 
@@ -150,7 +154,7 @@ sf_fzf() {
 			for shared_part in "${shared_parts_array[@]}"; do
 				local sp_handle="${shared_part#*) }"
 
-				silverfin "${operation}" --shared-part "$sp_handle" "$target_flag" "$target_handle"
+				silverfin "${operation}" --shared-part "$sp_handle" "$target_flag" "$target_handle" --yes
 			done
 		done
 	}
