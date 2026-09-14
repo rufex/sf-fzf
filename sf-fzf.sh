@@ -101,9 +101,9 @@ sf_fzf() {
 			esac
 
 			if [[ "$command" != "create" ]]; then
-				silverfin "${command}"-"${template_type}" "$flag" "$template_handle" ${firm_flag:+"$firm_flag"} --yes
+				silverfin "${command}"-"${template_type}" "$flag" "$template_handle" ${firm_flag:+"$firm_flag"} ${message_flag:+"$message_flag"} --yes
 			else
-				silverfin "${command}"-"${template_type}" "$flag" "$template_handle" ${firm_flag:+"$firm_flag"}
+				silverfin "${command}"-"${template_type}" "$flag" "$template_handle" ${firm_flag:+"$firm_flag"} ${message_flag:+"$message_flag"}
 			fi
 		done
 	}
@@ -154,7 +154,7 @@ sf_fzf() {
 			for shared_part in "${shared_parts_array[@]}"; do
 				local sp_handle="${shared_part#*) }"
 
-				silverfin "${operation}" --shared-part "$sp_handle" "$target_flag" "$target_handle" ${firm_flag:+"$firm_flag"} --yes
+				silverfin "${operation}" --shared-part "$sp_handle" "$target_flag" "$target_handle" ${firm_flag:+"$firm_flag"} ${message_flag:+"$message_flag"} --yes
 			done
 		done
 	}
@@ -167,13 +167,17 @@ sf_fzf() {
 		run_shared_part_operation "remove-shared-part" "remove"
 	}
 
-	# Parse --firm or --partner flag
+	# Parse --firm, --partner, and --message flags
 	local firm_flag=""
+	local message_flag=""
 	local cmd_args=()
 	for arg in "$@"; do
 		case "$arg" in
 		--firm=* | --partner=*)
 			firm_flag="$arg"
+			;;
+		--message=*)
+			message_flag="$arg"
 			;;
 		*)
 			cmd_args+=("$arg")
